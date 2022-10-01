@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 2389642872552423181}
   - component: {fileID: 6609761550992975093}
   - component: {fileID: -4219513309804963078}
-  m_Layer: 0
+  - component: {fileID: -8266567513636979148}
+  m_Layer: 8
   m_Name: Alien
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,13 +46,13 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1.45
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 203.5
+  m_Acceleration: 15.5
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 6.2
   m_BaseOffset: 0
@@ -86,6 +87,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  navigationUpdate: 0.5
+--- !u!135 &-8266567513636979148
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4232699560037261835}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0.34, y: 2.54, z: 0.57}
 --- !u!1001 &4713894627344629424
 PrefabInstance:
   m_ObjectHideFlags: 0
