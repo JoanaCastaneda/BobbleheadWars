@@ -6,22 +6,56 @@ public class Gun : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public Transform launchPosition;
+    private AudioSource audioSource;
+
+    public bool isUpgraded;
+    public float upgradeTime = 10.0f;
+    private float currentTime;
+
+    private Rigidbody createBullet()
+    {
+        GameObject bullet = Instantiate(bulletPrefab) as GameObject;
+        bullet.transform.position = launchPosition.position;
+        return bullet.GetComponent<Rigidbody>();
+    }
 
     void fireBullet()
     {
-        // 1 create a new bullet object of the prefab
-        GameObject bullet = Instantiate(bulletPrefab) as GameObject;
+        Rigidbody bullet = createBullet();
+        bullet.velocity = transform.parent.forward * 100;
 
-        // 2 placing the bu
-        bullet.transform.position = launchPosition.position;
-        // 3
-        bullet.GetComponent<Rigidbody>().velocity =
-        transform.parent.forward * 100;
+        if (isUpgraded)
+        {
+            Rigidbody bullet2 = createBullet();
+            bullet2.velocity =
+            (transform.right + transform.forward / 0.5f) * 100;
+            Rigidbody bullet3 = createBullet();
+            bullet3.velocity =
+            ((transform.right * -1) + transform.forward / 0.5f) * 100;
+
+            if (isUpgraded)
+            {
+                audioSource.PlayOneShot(SoundManager.Instance.upgradedGunFire);
+            }
+            else
+            {
+                audioSource.PlayOneShot(SoundManager.Instance.gunFire);
+            }
+
+        }
+
     }
+
+    public void UpgradeGun()
+    {
+        isUpgraded = true;
+        currentTime = 0;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -40,5 +74,13 @@ public class Gun : MonoBehaviour
             CancelInvoke("fireBullet");
         }
 
+        currentTime += Time.deltaTime;
+        if (currentTime > upgradeTime && isUpgraded == true)
+        {
+            isUpgraded = false;
+        }
+
     }
+
+
 }
