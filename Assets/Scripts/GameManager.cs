@@ -26,12 +26,23 @@ public class GameManager : MonoBehaviour
     private float actualUpgradeTime = 0;
     private float currentUpgradeTime = 0;
 
+    public GameObject deathFloor;
+
+    public Animator arenaAnimator;
+
     // Start is called before the first frame update
     void Start()
     {
         actualUpgradeTime = Random.Range(upgradeMaxTimeSpawn - 3.0f,
  upgradeMaxTimeSpawn);
         actualUpgradeTime = Mathf.Abs(actualUpgradeTime);
+    }
+
+    private void endGame()
+    {
+        SoundManager.Instance.PlayOneShot(SoundManager.Instance.
+        elevatorArrived);
+        arenaAnimator.SetTrigger("PlayerWon");
     }
 
     // Update is called once per frame
@@ -117,7 +128,7 @@ public class GameManager : MonoBehaviour
 
                         alienScript.OnDestroy.AddListener(AlienDestroyed);
 
-
+                      //  alienScript.GetDeathParticles().SetDeathFloor(deathFloor);
 
 
                     }
@@ -133,6 +144,11 @@ public class GameManager : MonoBehaviour
     {
         aliensOnScreen -= 1;
         totalAliens -= 1;
+
+        if (totalAliens == 0)
+        {
+            Invoke("endGame", 2.0f);
+        }
     }
 }
 

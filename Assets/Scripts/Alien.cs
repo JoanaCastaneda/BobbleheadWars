@@ -15,7 +15,16 @@ public class Alien : MonoBehaviour
     public Rigidbody head;
     public bool isAlive = true;
 
-    
+    private DeathParticles deathParticles;
+
+    public DeathParticles GetDeathParticles()
+    {
+        if (deathParticles == null)
+        {
+            deathParticles = GetComponentInChildren<DeathParticles>();
+        }
+        return deathParticles;
+    }
 
     public void Die()
     {
@@ -31,7 +40,13 @@ public class Alien : MonoBehaviour
         OnDestroy.RemoveAllListeners();
         SoundManager.Instance.PlayOneShot(SoundManager.Instance.alienDeath);
 
-       // head.GetComponent<SelfDestruct>().Initiate(); son para borrar cadaveres en 3 sec pero no me deja destruir los objetos pag 225
+        // head.GetComponent<SelfDestruct>().Initiate(); son para borrar cadaveres en 3 sec pero no me deja destruir los objetos pag 225
+
+        if (deathParticles)
+        {
+            deathParticles.transform.parent = null;
+            deathParticles.Activate();
+        }
 
         Destroy(gameObject);
     }

@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 
 
 {
+
+    private DeathParticles deathParticles;
     public float timeBetweenHits = 2.5f;
     private bool isHit = false;
     private float timeSinceHit = 0;
@@ -27,6 +29,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        deathParticles = gameObject.GetComponentInChildren<DeathParticles>();
     }
 
     public void Die()
@@ -43,6 +46,9 @@ public class PlayerController : MonoBehaviour
         head.transform.parent = null;
         head.useGravity = true;
         SoundManager.Instance.PlayOneShot(SoundManager.Instance.marineDeath);
+
+        deathParticles.Activate();
+
         Destroy(gameObject);
 
         ///
