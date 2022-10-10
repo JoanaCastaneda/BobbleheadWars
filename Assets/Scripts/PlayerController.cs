@@ -6,7 +6,12 @@ public class PlayerController : MonoBehaviour
 
 
 {
+    public float timeBetweenHits = 2.5f;
+    private bool isHit = false;
+    private float timeSinceHit = 0;
+    private int hitNumber = -1;
 
+    public float[] hitForce;
     public float moveSpeed = 50.0f;
     private CharacterController characterController;
     public Rigidbody head;
@@ -24,13 +29,47 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
 
-       {
-
-       
+       {       
 
         Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"),
       0, Input.GetAxis("Vertical"));
         characterController.SimpleMove(moveDirection * moveSpeed);
+
+        if (isHit)
+        {
+            timeSinceHit += Time.deltaTime;
+            if (timeSinceHit > timeBetweenHits)
+            {
+                isHit = false;
+                timeSinceHit = 0;
+            }
+        }
+
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Alien alien = other.gameObject.GetComponent<Alien>();
+        if (alien != null)
+        { // 1
+            if (!isHit)
+            {
+                hitNumber += 1; // 2
+                CameraShake cameraShake = Camera.main.GetComponent<CameraShake>();
+                if (hitNumber < hitForce.Length) // 3 
+                {
+                    cameraShake.intensity = hitForce[hitNumber];
+                    cameraShake.Shake();
+                }
+                else
+                {
+                    // death todo
+                }
+                isHit = true; // 4
+                SoundManager.Instance.PlayOneShot(SoundManager.Instance.hurt);
+            }
+            alien.Die();
+        }
     }
 
     void FixedUpdate()
@@ -48,7 +87,7 @@ public class PlayerController : MonoBehaviour
             Debug.DrawRay(ray.origin, ray.direction * 1000, Color.green);
 
             if (Physics.Raycast(ray, out hit, 1000, layerMask,
- QueryTriggerInteraction.Ignore))
+             QueryTriggerInteraction.Ignore))
             {
                 if (hit.point != currentLookTarget)
                 {
