@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     private CharacterController characterController;
     public Rigidbody head;
 
+    public Rigidbody marineBody;
+    private bool isDead = false;
+
     public LayerMask layerMask;
     private Vector3 currentLookTarget = Vector3.zero;
 
@@ -25,6 +28,28 @@ public class PlayerController : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
     }
+
+    public void Die()
+    {
+        bodyAnimator.SetBool("IsMoving", false);
+        marineBody.transform.parent = null;
+        marineBody.isKinematic = false;
+        marineBody.useGravity = true;
+        marineBody.gameObject.GetComponent<CapsuleCollider>().enabled = true;
+        marineBody.gameObject.GetComponent<Gun>().enabled = false;
+
+        //duda de si esta bien awui o debajo del siguiente bracket
+        Destroy(head.gameObject.GetComponent<HingeJoint>());
+        head.transform.parent = null;
+        head.useGravity = true;
+        SoundManager.Instance.PlayOneShot(SoundManager.Instance.marineDeath);
+        Destroy(gameObject);
+
+        ///
+    }
+
+
+
 
     // Update is called once per frame
     void Update()
@@ -63,7 +88,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-                    // death todo
+                    Die(); // death todo
                 }
                 isHit = true; // 4
                 SoundManager.Instance.PlayOneShot(SoundManager.Instance.hurt);

@@ -38,6 +38,10 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 
+        if (player == null)
+        {
+            return;
+        }
         /////////////////
         currentUpgradeTime += Time.deltaTime;
 
